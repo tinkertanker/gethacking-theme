@@ -16,7 +16,12 @@ $ npx create-slate-theme my-new-theme
 
 2. Follow the steps in https://shopify.github.io/slate/docs/connect-to-your-store to update the .env file. The slate_theme_id has to be retrieved from the current live theme.
 
-3. Pull the files from this repo into the folder. It should replace the relevant starter files while leaving the rest untouched.
+3. Fetch the files from this repo into the folder. This should replace the relevant starter files while leaving the rest untouched:
+```
+$ git remote add origin https://github.com/Tinkertanker/gethacking-theme.git
+$ git fetch --all
+$ git reset --hard origin/master
+```
 
 4. Edit the theme as you like on your text editor.
 
