@@ -1,0 +1,24 @@
+<div class="col">
+  <div class="colIn">
+    <a href="{{ collection.url }}">
+      <!-- Begin product image -->
+      <div class="cat_img">
+        {% if collection.image %}
+        <img src="{{ collection.image.src | collection_img_url: 'large' }}" alt="{{ collection.image.alt }}" />
+        {% else %}
+        <img src="{{ collection.products.first.featured_image | product_img_url: 'large' }}" alt="{{ collection.title | escape  }}" />
+        {% endif %}
+      </div>
+      <!-- End product image -->
+
+      <!-- Begin product description -->
+      <div class="cat_content">
+
+        <h2>{{ link.title }}</h2>
+        <p>{{ 'collections.list_collections.items_with_count' | t: count: collection.all_products_count }}</p>
+
+      </div>
+      <!-- End product description -->
+    </a>      
+  </div>
+</div>

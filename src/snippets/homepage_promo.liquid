@@ -1,0 +1,20 @@
+{% assign promo_url = promo | append: '_url' %}
+{% assign promo_alt = promo | append: '_alt' %}  
+{% assign promo_img_url = promo | append: '.png' %}
+{% assign promo_title = promo | append: '_title' %}
+{% assign promo_hidden = promo | append: '_hidden' %}
+{% assign promo_hidden1 = promo | append: '_hidden1' %}
+<li>
+<div class="home_banner">
+    <div class="container">
+        <div class="banner_details">
+            <h3><span>{{ settings[promo_title] }}</span> {{ settings[promo_hidden] }}</h3>
+            <p>{{ settings[promo_hidden1] }}</p>
+            <a class="shop_btn" href="{{ settings[promo_url] }}">shop now</a>
+        </div>
+        <div class="banner_img">
+            <img src="{{ promo_img_url | asset_url }}" alt="{{ settings[promo_title] }}">
+        </div>
+    </div>
+</div>
+</li>

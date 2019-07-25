@@ -1,0 +1,115 @@
+<div id="cart">
+
+  <!-- Begin empty cart -->
+  {% if cart.item_count == 0 %}
+  <div class="row">
+    <div class="span12 expanded-message">
+      <h2>{{ 'cart.general.empty' | t }}</h2>
+    </div>
+  </div>
+  <!-- End empty cart -->
+
+  <!-- Begin cart -->
+  {% else %}
+  <div class="row">
+    <div class="span12">
+      <h1>{{ 'cart.general.title' | t }}</h1>
+
+      <form action="/cart" method="post" id="cartform">
+        <table>
+          <thead>
+            <tr>
+              <th class="image">&nbsp;</th>
+              <th class="item">&nbsp;</th>
+              <th class="qty">{{ 'cart.general.quantity' | t }}</th>
+              <th class="price">{{ 'cart.general.price' | t }}</th>
+              <th class="remove">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in cart.items %}
+            <tr>
+              <td class="image">
+                <div class="product_image">
+                  <a href="{{ item.url }}">
+                    <img src="{{ item | img_url: 'small' }}"  alt="{{ item.title | escape }}" />
+                  </a>
+                </div>
+              </td>
+              <td class="item">
+                <a href="{{ item.url }}">
+                  <strong>{{ item.product.title }}</strong>
+                  {% if item.product.variants.size > 1 %}
+                  <span class="variant_title">{{ item.variant.title }}</span>
+                  {% endif %}
+                </a>
+              </td>
+              <td class="qty">
+                <input type="text" size="4" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" onfocus="this.select();" class="tc item-quantity" />
+              </td>
+              <td class="price">{{ item.line_price | money }}</td>
+              <td class="remove"><a href="/cart/change?line={{ forloop.index }}&quantity=0" class="cart">{{ 'cart.general.remove' | t }}</a></td>
+            </tr>
+            {% endfor %}
+            <tr class="summary">
+              <td class="image">&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td class="price"><span class="total"><strong><span id="bk-cart-subtotal-price">{{ cart.total_price | money }}</span></strong></span></td>
+              <td>&nbsp;</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="row">
+          
+          {% if settings.display_cart_note %}
+          <div class="cart-note span5 inner-left inner-right">
+            <label for="note">{{ 'cart.general.instructions' | t }}</label>
+            <textarea id="note" name="note" rows="10" cols="50">{{ cart.note }}</textarea>
+          </div>
+          {% endif %}
+          <div class="cart-note span7 fr inner-left inner-right">
+            <div class="buttons clearfix">
+              <input type="submit" id="checkout" class="btn" name="checkout" value="{{ 'cart.general.checkout' | t }}" />
+              <input type="submit" id="update-cart" class="btn" name="update" value="{{ 'cart.general.update' | t }}" />
+            </div>
+          </div>
+        </div>
+        
+        {% endif %}
+
+      </form>
+    </div>
+
+    {% if cart.item_count == 0 %}
+    
+    <h3>Do not despair. Check out our bestselling products.</h3>
+    
+    <div class="product_slider">
+{% unless settings.frontpage_collection == blank or collections[settings.frontpage_collection].empty? or collections[settings.frontpage_collection].products_count == 0 %}
+
+  {% capture featured_items_title %}{{ 'homepage.sections.featured_items' | t }}{% endcapture %}
+  {% unless featured_items_title == blank or settings.remove_featured_products_title %}
+  <div class="page_title">
+    <h2><a href="/collections/classes"><span>Shop for</span> Bestsellers</a> </h2>
+  </div>
+  {% endunless %}
+ <div class="container">
+  <div class="row products product_list">
+    {% for product in collections[settings.frontpage_collection].products %}
+    {% include 'product-loop' with settings.frontpage_collection %}
+    {% endfor %}
+  </div>
+</div>
+      
+{% endunless %}
+</div>
+
+    
+    
+    {% endif %}
+
+  </div>
+  <!-- End cart -->
+</div>

@@ -1,0 +1,32 @@
+{% assign grid = 0 %}
+{% if settings.promo1 %}{% assign grid = grid | plus: 1 %}{% endif %}
+{% if settings.promo2 %}{% assign grid = grid | plus: 1 %}{% endif %}
+{% if settings.promo3 %}{% assign grid = grid | plus: 1 %}{% endif %} 
+{% if settings.promo4 %}{% assign grid = grid | plus: 1 %}{% endif %}   
+{% if grid > 0 %} 
+<div class="main_banner">
+ <div class="flexslider-container">
+    <div class="flexslider">
+       <ul class="slides">
+        {% assign promo = 'promo1' %}
+        {% if settings.promo1 %}        
+          {% include 'homepage_promo' %}
+        {% endif %}
+        {% assign promo = 'promo2' %}
+        {% if settings.promo2 %}  
+          {% include 'homepage_promo' %}
+        {% endif %}        
+        {% assign promo = 'promo3' %}
+        {% if settings.promo3 %}  
+          {% include 'homepage_promo' %}
+        {% endif %}
+        {% assign promo = 'promo4' %}
+        {% if settings.promo4 %}  
+          {% include 'homepage_promo' %}
+        {% endif %}        
+   	  </ul>
+      <div class="flex-controls"></div>
+  	</div>
+ </div>
+</div>
+{% endif %}

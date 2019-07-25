@@ -1,0 +1,46 @@
+<div id="collection">
+
+  <!-- Begin collection info -->
+  <div class="row">
+    <div class="span12">
+        <h1 class="collection-title"></h1>
+    </div>
+  </div>
+
+  <!-- Begin no products -->
+  {% if collection.products.size == 0 %}
+  <div class="row">
+    <div class="span12 expanded-message">
+      <p>{{ 'collections.general.no_items' | t }}</p>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="row products">
+    {% for link in linklists[page.handle].links %}
+    	{% assign collection = link.object %}
+		<div class="product span3">
+			<div class="inner_product">
+
+  				<div class="image">
+    				<a href="{{ collection.url }}">
+    					{% if collection.image %}
+              				<img src="{{ collection.image | img_url: 'large' }}" alt="{{ collection.title | escape  }}" />
+            			{% else %}
+              				{% assign product = collection.products.first %}
+            			    <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ collection.title | escape  }}" />
+                      	{% endif %}
+                  	</a>
+  				</div>
+
+  				<div class="details">
+    				<a href="{{ collection.url }}" class="clearfix">
+      					<h3 class="collection-title">{{ link.title }}</h3>
+    				</a>
+  				</div>
+ 			</div>
+		</div>
+    {% endfor %}
+  </div>
+
+</div>

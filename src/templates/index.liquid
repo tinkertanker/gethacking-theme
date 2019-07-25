@@ -1,0 +1,326 @@
+{{ 'styles.scss.css' | asset_url | stylesheet_tag }}
+<!-- Begin slider -->
+{% section 'holiday-camp-banner' %}
+{% include 'main-banner' %}
+
+{% comment %}
+<div class="main_banner">
+  <div class="container">
+    <div class="flexslider-container">
+      <div class="flexslider">
+        <ul class="slides">
+          {% for i in (1..10) %}
+            {% capture show_slide %}display_slide_{{ i }}{% endcapture %}
+            {% capture image %}slideshow_{{ i }}.jpg{% endcapture %}
+            {% capture link %}slide_{{ i }}_link{% endcapture %}
+            {% capture alt %}slide_{{ i }}_alt{% endcapture %}
+            {% if settings[show_slide] %}
+            <li>
+              <a href="{{ settings[link] }}">
+                <img src="{{ image | asset_url }}" alt="{{ settings[alt] | escape }}" />
+              </a>
+            </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+        <div class="flex-controls"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endcomment %}
+<!-- End slider -->
+
+
+<!--- Front page grid--->
+
+<div class="cat_section">
+  <div class="container">
+    <div class="cat_in_boxes clearfix">
+      <div class="cat_wide">
+        <div class="cat_in">
+          <a href= {{ settings.grid-link-1 }}>
+              <div class="cat_img">
+                <img src= {{ settings.grid-image-1 | img_url: 'master' }} >
+              </div>
+              <div class="cat_content">
+                <h2>{{ settings.grid-header-1 }}</h2>
+                <p>{{ settings.grid-text-1 }}</p>
+                <span class="shop_btn">Learn More</span>
+              </div>
+            </a>
+        </div>
+      </div>
+      <div class="cat_narrow">
+        <div class="cat_in">
+          <a href= {{ settings.grid-link-2 }}>
+              <div class="cat_img">
+                <img src= {{ settings.grid-image-2 | img_url: 'master' }}>
+              </div>
+              <div class="cat_content">
+                <h2>{{ settings.grid-header-2 }}</h2>
+                <p>{{ settings.grid-text-2 }}</p>
+                <span class="shop_btn">shop now</span>
+              </div>
+            </a>
+        </div>
+      </div>
+      <div class="cat_narrow">
+        <div class="cat_in">
+          <a href= {{ settings.grid-link-3 }}>
+              <div class="cat_img">
+                <img src= {{ settings.grid-image-3 | img_url: 'master' }}>
+              </div>
+              <div class="cat_content">
+                <h2>{{ settings.grid-header-3 }}</h2>
+                <p>{{ settings.grid-text-3 }}</p>
+                <span class="shop_btn">shop now</span>
+              </div>
+            </a>
+        </div>
+      </div>
+      <div class="cat_wide">
+        <div class="cat_in">
+          <a href= {{ settings.grid-link-4 }}>
+              <div class="cat_img">
+                <img src= {{ settings.grid-image-4 | img_url: 'master' }}>
+              </div>
+              <div class="cat_content">
+                <h2>{{ settings.grid-header-4 }}</h2>
+                <p>{{ settings.grid-text-4 }}</p>
+                <span class="shop_btn">shop now</span>
+              </div>
+            </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if settings.homepage != blank %}
+<!-- Begin intro -->
+<div class="grey_bg">
+<div class="categories_main clearfix">
+ <div class="container">
+    {{ pages[settings.homepage].content }}
+  </div>
+</div>
+</div>
+<!-- End intro -->
+{% endif %}
+
+{% if settings.show_fp_images %}
+<!-- Begin promo images -->
+<div class="row" id="fp-images" style="margin-bottom:25px">
+  {% for i in (1..3) %}
+  {% capture fp_image %}fp_image_{{ i }}.jpg{% endcapture %}
+  {% capture fp_link %}fp_image_{{ i }}_link{% endcapture %}
+  {% capture fp_alt %}fp_image_{{ i }}_alt{% endcapture %}
+  <div class="span4">
+    <a href="{{ settings[fp_link] }}">
+      <img src="{{ fp_image | asset_url }}" alt="{{ settings[fp_alt] | escape }}" />
+    </a>
+  </div>
+  {% endfor %}
+</div>
+<!-- End promo images -->
+{% endif %}
+
+{% if settings.show_collections and settings.frontpage_collections != blank and settings.frontpage_collections != 'main-menu' and linklists[settings.frontpage_collections].links.size > 0 %}
+
+  {% capture featured_collections_title %}{{ 'homepage.sections.featured_collections' | t }}{% endcapture %}
+  {% unless featured_collections_title == blank or settings.remove_featured_collections_title %}
+  <div class="span12 p10">
+    <h2>{{ featured_collections_title }}</h2>
+  </div>
+  {% endunless %}
+<div class="categories_boxes">
+  <div class="container">
+    <div class="cat_block clearfix">
+    {% for link in linklists[settings.frontpage_collections].links %}
+    {% if link.type == 'collection_link' %}
+      {% assign collection = link.object %}
+      {% include 'collection-loop' %}
+    {% endif %}
+    {% endfor %}
+  	</div>
+  </div>
+</div>
+{% endif %}
+
+
+<div class="product_slider">
+{% unless settings.frontpage_collection == blank or collections[settings.frontpage_collection].empty? or collections[settings.frontpage_collection].products_count == 0 %}
+
+  {% capture featured_items_title %}{{ 'homepage.sections.featured_items' | t }}{% endcapture %}
+  {% unless featured_items_title == blank or settings.remove_featured_products_title %}
+  <div class="page_title">
+    <h2><a href="/collections/classes"><span>Shop for</span> Bestsellers</a> </h2>
+  </div>
+  {% endunless %}
+ <div class="container">
+  <div class="row products product_list">
+    {% for product in collections[settings.frontpage_collection].products %}
+    {% include 'product-loop' with settings.frontpage_collection %}
+    {% endfor %}
+  </div>
+</div>
+{% endunless %}
+</div>
+
+<div class="grey_bg">
+  <div class="product_slider">
+  {% unless settings.frontpage_collection1 == blank or collections[settings.frontpage_collection1].empty? or collections[settings.frontpage_collection1].products_count == 0 %}
+
+    {% capture featured_items_title %}{{ 'homepage.sections.featured_items' | t }}{% endcapture %}
+    {% unless featured_items_title == blank or settings.remove_featured_products_title %}
+    <div class="page_title">
+      <h2><a href="/collections/littlebits"><span>Shop for</span>LittleBits</a> </h2>
+    </div>
+    {% endunless %}
+   <div class="container">
+    <div class="row products product_list">
+      {% for product in collections[settings.frontpage_collection1].products %}
+      {% include 'product-loop' with settings.frontpage_collection1 %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endunless %}
+  </div>
+</div>
+
+<div class="product_slider">
+  {% unless settings.frontpage_collection2 == blank or collections[settings.frontpage_collection2].empty? or collections[settings.frontpage_collection2].products_count == 0 %}
+
+  {% capture featured_items_title %}{{ 'homepage.sections.featured_items' | t }}{% endcapture %}
+  {% unless featured_items_title == blank or settings.remove_featured_products_title %}
+  <div class="page_title">
+    <h2><a href="/collections/playmaker"><span>Shop for</span>Kids</a> </h2>
+  </div>
+  {% endunless %}
+  <div class="container">
+    <div class="row products product_list">
+      {% for product in collections[settings.frontpage_collection2].products %}
+      {% include 'product-loop' with settings.frontpage_collection2 %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endunless %}
+</div>
+
+<div class="gadgets">
+  <div class="container clearfix">
+    <div class="gadgets_text">
+      <h2>Gadgets &amp; Toys</h2>
+      <a href="/collections/things" class="shopNow">shop now</a>
+    </div>
+    <div class="gadgets_img">
+      <img src="{{ 'gadgets_img.png' | asset_url }}" alt=""/>
+    </div>
+  </div>
+</div>
+
+
+{% if settings.homepage1 != blank %}
+<!-- Begin intro -->
+<div class="about_main">
+  <div class="container">
+    {{ pages[settings.homepage1].content }}
+  </div>
+</div>
+<!-- End intro -->
+{% endif %}
+
+<div class="grey_bg">
+  <div class="recentPost">
+    <div class="container">
+      <div class="page_title">
+        <h2><a href="/blogs/news"><span>recent</span> posts</a></h2>
+      </div>
+      <div class="post_in_boxes clearfix">
+      	
+        {% assign blog_handle = 'news' %}
+
+{% unless blogs[blog_handle].empty? or blogs[blog_handle].articles.size == 0 %}
+
+{% if blogs[blog_handle].articles.size >= 3 %}
+  {% assign container_width = 'one-whole' %}
+  {% assign article_width = 'large-up--one-third medium--one-third small--one-whole' %}
+{% elsif blogs[blog_handle].articles.size == 2 %}
+  {% assign container_width = 'large-up--two-thirds large-up--push-one-sixth' %}
+  {% assign article_width = 'large-up--one-half medium--one-half small--one-whole' %}
+{% elsif blogs[blog_handle].articles.size == 1 %}
+  {% assign container_width = 'large-up--two-thirds large-up--push-one-sixth' %}
+  {% assign article_width = 'one-whole' %}
+{% endif %}
+
+
+
+
+      {% for article in blogs[blog_handle].articles limit: 3 %}
+        <div class="post">
+          <div class="post_in">
+              {% if article.image %}
+              <div class="post_img">
+                <a href="{{ article.url }}">
+                  <img src="{{ article.image | img_url: '400x' }}" alt="{{ article.title | escape }}" />
+                </a>
+              </div>
+              {% endif %}
+              
+              <div class="post_text">
+              <h2>{{ article.title | link_to: article.url }}</h2>
+              {% assign article_has_image = false %}
+              {% assign content = article.excerpt_or_content %}
+              
+    
+              {% if article_has_image %}
+                <p>{{ content | strip_html | truncatewords: 20 }}</p>
+              {% else %}
+                <p>{{ content | strip_html | truncatewords: 20 }}</p>
+              {% endif %}
+              
+               <a href="{{ article.url }}">Read more</a>
+              </div>
+             
+	 	  </div>
+        </div>
+      {% endfor %}
+        <div class="readMoreDiv"><a href="/blogs/news" class="readMore">Read More</a></div>
+{% endunless %}
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="insta_feed">
+  <div class="container">
+    <div class="insta_title">
+      <h2>Get<span>Hacking</span></h2>
+    </div>
+    <script type="text/javascript" src="{{ 'instagram.js' | asset_url }}"></script>
+    <script type="text/javascript">
+            try{Typekit.load();}catch(e){}
+
+            var feed = new Instafeed({
+                get: 'user',
+                userId: 8425820735,
+                accessToken: '8425820735.1677ed0.6db729640c574c7a88fbc6bfe860fae6',
+                target: 'instagram',
+                resolution: 'low_resolution',
+                limit:'6'
+        });
+
+        window.onload = function() {
+            feed.run();
+        };
+
+    </script>
+
+	<div class="instaBlock clearfix" id="instagram"></div>
+
+  </div>
+</div>

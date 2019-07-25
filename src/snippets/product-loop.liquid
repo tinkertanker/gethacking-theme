@@ -1,0 +1,54 @@
+{% capture collection_handle %}{{ product-loop | handleize }}{% endcapture %}
+{% capture url %}{% if collection_handle != "" %}/collections/{{ product-loop }}{{ product.url }}{% else %}{{ product.url }}{% endif %}{% endcapture %}
+<div class="product span3 {% if template == 'collection' %}adaptive-grid{% endif %}">
+<div class="inner_product">
+  {% if product.available %}
+    {% if product.price_min < product.compare_at_price_min %}
+      {% if settings.show_sale_circle %}
+      <span class="circle sale">{{ 'collections.product_item.sale' | t }}</span>
+      {% endif %}
+    {% endif %}
+  {% else %}
+    {% if product.template_suffix == 'requires-contact' %}
+        <span class="circle sold-out">special order</span>
+    {% else %}
+      {% if settings.show_sold_out_circle %}
+        <span class="circle sold-out">{{ 'products.general.sold_out_html' | t }}</span>
+      {% endif %}
+    {% endif %}
+
+  {% endif %}
+
+  <div class="image">
+    <a href="{{ url }}">
+      <img src="{{ product.featured_image | product_img_url: 'large' }}" alt="{{ product.title | escape  }}" />
+    </a>
+  </div>
+
+  <div class="details">
+    <a href="{{ url }}" class="clearfix">
+      <h4 class="title">{{ product.title }}</h4>
+      {% if settings.product_vendor %}
+      <span class="vendor">{{ product.vendor }}</span>
+      {% endif %}
+
+      <span class="price">
+      {% assign price = product.price | money %}
+      {% if product.available %}
+        {% if product.price_varies %}{{ 'collections.product_item.from_text_html' | t: price: price | remove: '.00'}}{% else %}{{ price | remove: '.00' }}{% endif %}
+
+        {% if product.compare_at_price_max > product.price %}
+          <del>{{ product.compare_at_price | money | remove: '.00' }}</del>&nbsp;
+        {% endif %}
+      {% else %}
+        {% if product.price_varies %}{{ 'collections.product_item.from_text_html' | t: price: price | remove: '.00'}}{% else %}{{ price | remove: '.00' }}{% endif %}
+        {% unless settings.show_sold_out_circle %}
+          {{ 'products.general.sold_out_html' | t }}
+        {% endunless %}
+      {% endif %}
+      </span>
+
+    </a>
+  </div>
+ </div>
+</div>

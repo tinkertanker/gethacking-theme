@@ -1,0 +1,241 @@
+<div id="product" class="{{ product.handle }}">
+  <div class="row clearfix">
+
+    <!-- Begin breadcrumb -->
+    <div class="span12">
+      <div class="breadcrumb clearfix">
+        <span><a href="{{ shop.url }}" title="{{ shop.name | escape }}"><span>{{ 'general.breadcrumbs.home' | t }}</span></a></span>
+        <span class="arrow-space">&#62;</span>
+        <span>
+          {% if collection %}
+          	{% if collection.handle == 'frontpage' %}
+            	{% for c in product.collections %}
+    				{% unless c.handle == 'frontpage' %}
+      					{% assign current_collection = c %}
+          			{% endunless %}
+         		{% endfor %}
+            {% else %}
+                {% assign current_collection = collection %}
+
+            {% endif %}
+            <a href="{{ current_collection.url }}" title="{{ current_collection.title | escape }}">
+              <span>{{ current_collection.title }}</span>
+            </a>
+          {% else %}
+            {% for c in product.collections %}
+    			{% unless c.handle == 'frontpage' %}
+      				{% assign current_collection = c %}
+                      <a href="{{ current_collection.url }}" title="{{ current_collection.title | escape }}">
+              <span>{{ current_collection.title }}</span></a>
+
+      				{% break %}
+    			{% endunless %}
+  			{% endfor %}
+
+          {% endif %}
+        </span>
+        <span class="arrow-space">&#62;</span>
+        <strong>{{ product.title }}</strong>
+
+      </div>
+    </div>
+    <!-- End breadcrumb -->
+    <!-- Begin product photos -->
+    <div class="{% if product.images.size == 1 or settings.thumbnails_position == 'below' %}span6{% else %}span5{% endif %}">
+
+      {% assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+      <!-- Begin featured image -->
+      <div class="image featured">
+        {% if settings.enable_product_image_zoom %}
+          <img src="{{ featured_image | img_url: '1024x1024' }}" alt="{{ featured_image.alt | escape }}" />
+        {% else %}
+          <a href="{{ featured_image | img_url: '1024x1024' }}" id="placeholder" data-image-id="{{ featured_image.id }}">
+            <img src="{{ featured_image | img_url: '1024x1024' }}" alt="{{ featured_image.alt | escape }}" />
+          </a>
+          <ul id="lightbox" class="hidden">
+            {% for image in product.images %}
+            <li>
+              <a href="{{ image.src | img_url: 'master' }}" class="fancy" rel="gallery" data-image-id="{{ image.id }}"></a>
+            </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <!-- End product image -->
+
+      {% if product.images.size > 1 and settings.thumbnails_position == 'below' %}
+      <!-- Begin thumbnails -->
+      <div class="thumbs clearfix">
+        {% for image in product.images %}
+        <div class="image span2{% cycle 'last-in-row': '', '', ' last-in-row' %}">
+          <a href="{{ image | img_url: '1024x1024' }}" data-image-id="{{ image.id }}">
+            <img src="{{ image | img_url: 'large' }}" alt="{{ image.alt | escape }}" />
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+      <!-- End thumbnails -->
+      {% endif %}
+
+    </div>
+    <!-- End product photos -->
+
+    {% if product.images.size > 1 and settings.thumbnails_position == 'right' %}
+    <!-- Begin thumbnails -->
+    <div class="span1">
+      <div class="thumbs clearfix">
+        {% for image in product.images %}
+        <div class="image">
+          <a href="{{ image | product_img_url: '1024x1024' }}" data-image-id="{{ image.id }}">
+            <img src="{{ image | product_img_url: 'compact' }}" alt="{{ image.alt | escape }}" />
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- End thumbnails -->
+    {% endif %}
+
+
+    <!-- Begin description -->
+    <div class="span6">
+
+      <h1 class="title">{{ product.title }}</h1>
+
+      <div class="purchase">
+
+        {% assign variant = product.selected_or_first_available_variant %}
+        <h2 class="price" id="price-preview">
+          <span>{{ variant.price | money }}</span>{% if variant.price < variant.compare_at_price %} <del>{{ variant.compare_at_price | money }}</del>{% endif %}
+        </h2>
+	       <p style="color:#999;">Price in Singapore Dollars, including 7% GST of {{ variant.price | times:0.065420561 | money }}</p>
+      </div>
+      
+      
+      {% form 'contact' %}
+        <div class="form-vertical">
+          <h3 class="contact_me">This product is available for special order. <br/>Leave us your contact and we will get in touch.</h3>
+          <!-- <p>{{ product.template_suffix }}</p> -->
+        {% if form.posted_successfully? %}
+        <div class="successForm feedback">
+          <p>{{ 'contact.form.success' | t }}</p>
+        </div>
+        {% endif %}
+
+        {% if form.errors %}
+        <div class="errorForm feedback">
+
+          <p>{{ 'contact.errors.errors_with_count' | t: count: form.errors.count }}</p>
+
+          {% for field in form.errors %}
+          <p>{{ 'contact.errors.message_html' | t: field: field, error: form.errors.messages[field] }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <input type="hidden" id="contactFormMessage" name="contact[body]" value="{{ product.title }}" />
+        <div id="contactFormWrapper">
+          <p>
+            <label>{{ 'contact.form.name' | t }}</label><br/>
+            <input type="text" id="contactFormName" name="contact[name]" placeholder="{{ 'contact.form.name_ph' | t }}" />
+          </p>
+          <p>
+            <label>{{ 'contact.form.email' | t }}</label><br/>
+            <input type="email" id="contactFormEmail" name="contact[email]" placeholder="{{ 'contact.form.email_ph' | t }}" />
+          </p>
+          <p>
+            <label>{{ 'contact.form.phone' | t }}</label><br/>
+            <input type="telephone" id="contactFormTelephone" name="contact[phone]" placeholder="{{ 'contact.form.phone_ph' | t }}" />
+          </p>
+          <p>
+            <input type="submit" id="contactFormSubmit" value="{{ 'contact.form.send' | t }}" class="btn" />
+          </p>
+        </div>
+      </div>
+        {% endform %}
+      
+      
+      <div class="description">
+        {{ product.description }}
+      </div>
+
+      {% if settings.social_sharing_products %}
+      <!-- Begin social buttons -->
+      <div class="social">
+        {% include 'social-sharing' %}
+      </div>
+      <!-- End social buttons -->
+      {% endif %}
+
+    </div>
+    <!-- End description -->
+
+  </div>
+
+  <!-- Begin related product -->
+  {% if settings.show_related_products %}
+    {% include 'related-products' %}
+  {% endif %}
+
+</div>
+
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.title | escape }}",
+  "url": "{{ shop.url }}{{ product.url }}",
+  {% if product.featured_image %}
+    {% assign image_size = product.featured_image.width | append: 'x' %}
+    "image": [
+      "https:{{ product.featured_image.src | img_url: image_size }}"
+    ],
+  {% endif %}
+  "description": "{{ product.title | escape }}",
+  {% if current_variant.sku != blank %}
+    "sku": "{{ current_variant.sku }}",
+  {% endif %}
+  "brand": {
+    "@type": "Thing",
+    "name": "{{ product.vendor | escape }}"
+  },
+  {% if product.variants %}
+    "offers": [
+      {% for variant in product.variants %}
+        {
+          "@type" : "Offer",
+          "availability" : "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+          "price" : "{{ variant.price | divided_by: 100.00 }}",
+          "priceCurrency" : "{{ shop.currency }}",
+          "url" : "{{ shop.url }}{{ variant.url }}",
+          "itemOffered" :
+          {
+              "@type" : "Product",
+              {% if variant.image %}
+                {% assign variant_image_size = variant.image.width | append: 'x' %}
+                "image": "http:{{ variant.image.src | img_url: variant_image_size }}",
+              {% endif %}
+              {% if variant.title != blank %}
+                "name" : "{{ variant.title | escape }}",
+              {% endif %}
+              {% if variant.sku != blank %}
+                "sku": "{{ variant.sku }}",
+              {% endif %}
+              {% if variant.weight != blank %}
+                "weight": {
+                  "@type": "QuantitativeValue",
+                  {% if variant.weight_unit != blank %}
+                    "unitCode": "{{ variant.weight_unit }}",
+                  {% endif %}
+                  "value": "{{ variant.weight | weight_with_unit: variant.weight_unit }}"
+                },
+              {% endif %}
+              "url": "{{ shop.url }}{{ variant.url }}"
+          }
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  {% endif %}
+}
+</script>
